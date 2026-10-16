@@ -19,3 +19,22 @@ bastion = {
   name = "vnet-utvt-integradora-dev-mxc-001-bastion"
   sku  = "Developer"
 }
+
+# Standard_B2ats_v2 está restringido en la zona 3 de México Central para esta
+# suscripción; se ubica en la zona 1, la misma de PostgreSQL.
+vm = {
+  name                   = "vm-utvt-integradora-dev-mxc-001"
+  size                   = "Standard_B2ats_v2"
+  zone                   = "1"
+  admin_username         = "azureuser"
+  ssh_public_key_path    = "~/.ssh/id_rsa_utvt_integradora.pub"
+  network_interface_name = "nic-utvt-integradora-vm-dev-mxc-001"
+  os_disk_name           = "osdisk-utvt-integradora-vm-dev-mxc-001"
+
+  image = {
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+    version   = "latest"
+  }
+}

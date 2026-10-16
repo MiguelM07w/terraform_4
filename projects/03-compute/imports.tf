@@ -1,5 +1,6 @@
 # Adopción de los recursos de cómputo creados previamente desde el portal (ADR-001).
-# Una vez importados en el estado, estos bloques se retiran.
+# La VM Windows original no se importa: se sustituye por la VM Linux del
+# diagrama (ADR-007). Una vez importados en el estado, estos bloques se retiran.
 
 locals {
   rg_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${local.resource_group_name}"

@@ -132,3 +132,33 @@ mientras esa autenticación esté activa, lo que obligaría a manejar un secreto
   administrador de Entra ID (ver `03-compute`).
 - Las herramientas que dependían de llaves de Storage deben autenticarse con
   `--auth-mode login` o con una identidad administrada.
+
+---
+
+## ADR-007 · Sustituir la VM Windows por la VM Linux worker del diagrama
+
+**Estado:** aceptada
+
+**Contexto.** El despliegue manual tenía una VM Windows Server 2025 `Standard_B2als_v2` con IP
+pública y sin identidad administrada. El diagrama define una VM Linux `B2ats_v2` sin IP pública,
+administrada por SSH privado mediante Bastion y con identidad administrada. Para esta suscripción,
+`Standard_B2ats_v2` está restringido solo en la zona 3 de México Central.
+
+**Decisión.**
+- Eliminar la VM Windows y los recursos que el portal creó con ella (disco, NIC, NSG de NIC e IP
+  pública) y crear con Terraform una VM Ubuntu 24.04 LTS `Standard_B2ats_v2` en la zona 1, la misma
+  de PostgreSQL, con el mismo nombre.
+- Trusted Launch (arranque seguro y vTPM), autenticación exclusiva con llave SSH RSA 4096,
+  accelerated networking, disco StandardSSD de 30 GiB y diagnóstico de arranque administrado.
+- Identidad administrada asignada por el sistema con *Storage Blob Data Contributor* sobre la
+  cuenta de almacenamiento y un rol de Entra ID en PostgreSQL.
+
+**Consecuencias.**
+- La superficie de ataque se reduce: no hay IP pública, contraseñas ni puertos abiertos desde
+  Internet, y el costo baja (Linux 2 vCPU/1 GiB en lugar de Windows 2 vCPU/4 GiB).
+- La subred es privada y no tiene NAT Gateway, por lo que la VM no tiene salida a Internet ni
+  puede instalar paquetes ni recibir actualizaciones desde los repositorios públicos. Para
+  habilitarlo hay que agregar un NAT Gateway (aproximadamente US$32 al mes), lo cual se dejó fuera
+  del alcance por costo.
+- En la primera adopción, el RBAC de la Web App se aplicó en un segundo `apply`: al agregar una
+  identidad a un recurso importado, el proveedor no expone `principal_id` durante el `plan`.

@@ -44,3 +44,34 @@ variable "bastion" {
     error_message = "Los SKU dedicados requieren IP pública e ip_configuration en AzureBastionSubnet; este proyecto implementa el SKU Developer (ADR-005)."
   }
 }
+
+variable "vm" {
+  description = "VM Linux worker sin IP pública."
+  type = object({
+    name                   = string
+    size                   = string
+    zone                   = optional(string)
+    admin_username         = string
+    ssh_public_key_path    = string
+    network_interface_name = string
+    os_disk_name           = string
+    os_disk_type           = optional(string, "StandardSSD_LRS")
+    os_disk_size_gb        = optional(number, 30)
+    image = object({
+      publisher = string
+      offer     = string
+      sku       = string
+      version   = string
+    })
+  })
+
+  validation {
+    condition     = !contains(["admin", "administrator", "root", "azureadmin"], lower(var.vm.admin_username))
+    error_message = "El nombre del administrador no puede ser un nombre reservado o predecible."
+  }
+
+  validation {
+    condition     = contains(["Standard_LRS", "StandardSSD_LRS", "Premium_LRS", "StandardSSD_ZRS", "Premium_ZRS"], var.vm.os_disk_type)
+    error_message = "Tipo de disco no soportado."
+  }
+}
