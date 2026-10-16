@@ -1,0 +1,59 @@
+# --- Terraform ---------------------------------------------------------------
+# Directorios de trabajo locales (proveedores y módulos descargados)
+**/.terraform/*
+
+# Archivos de estado: contienen IDs de recursos y valores sensibles
+*.tfstate
+*.tfstate.*
+*.tfstate.lock.info
+
+# Planes binarios generados con `terraform plan -out`
+*.tfplan
+tfplan
+
+# Logs de errores del CLI
+crash.log
+crash.*.log
+
+# Overrides locales que no deben versionarse
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Configuración local del CLI (puede incluir tokens)
+.terraformrc
+terraform.rc
+
+# --- Variables sensibles -----------------------------------------------------
+# Los .tfvars versionados solo contienen configuración no sensible.
+# Cualquier secreto se entrega mediante variables de entorno TF_VAR_*
+# o mediante estos archivos locales, que nunca se suben.
+*.auto.tfvars
+*.auto.tfvars.json
+*.secret.tfvars
+secrets.tfvars
+*.tfvars.json
+.env
+.env.*
+
+# --- Llaves y certificados ---------------------------------------------------
+*.pem
+*.key
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+
+# --- Evidencias locales ------------------------------------------------------
+# Salidas de plan/apply con IDs de suscripción; se sanitizan antes de usarse
+# en el reporte.
+evidencias/
+
+# --- Sistema operativo / IDE -------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
