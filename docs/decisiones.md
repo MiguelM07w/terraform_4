@@ -106,3 +106,29 @@ permite SSH tanto desde `168.63.129.16/32` (Developer) como desde `10.0.5.0/24` 
 
 **Consecuencias.** Bastion Developer admite una sola sesión simultánea y no soporta *peering*; si el
 proyecto lo requiere, basta con cambiar el SKU y agregar la IP pública en `03-compute`.
+
+---
+
+## ADR-006 · Autenticación exclusiva con Entra ID en los servicios de datos
+
+**Estado:** aceptada
+
+**Contexto.** El diagrama indica que la App Service y la VM se autentican ante PostgreSQL con tokens
+de sus identidades administradas y ante Blob con RBAC. En el despliegue manual, PostgreSQL tenía
+habilitada la autenticación por contraseña y la cuenta de almacenamiento, las llaves de acceso
+compartidas. Además, el proveedor `azurerm` exige la contraseña en cada actualización del servidor
+mientras esa autenticación esté activa, lo que obligaría a manejar un secreto en cada `apply`.
+
+**Decisión.**
+- PostgreSQL: `password_auth_enabled = false`; el administrador es un usuario de Entra ID. Si algún
+  entorno necesita contraseña, esta se entrega como variable efímera de solo escritura
+  (`administrator_password_wo`), y una precondición lo valida desde el `plan`.
+- Storage: `shared_access_key_enabled = false` y `default_to_oauth_authentication = true`.
+
+**Consecuencias.**
+- No existe ningún secreto en el código, en el estado ni en la configuración de las aplicaciones.
+- El usuario local `adminpgdev` ya no puede iniciar sesión. Los roles de base de datos de las
+  identidades administradas se crean con `pgaadauth_create_principal` desde una sesión del
+  administrador de Entra ID (ver `03-compute`).
+- Las herramientas que dependían de llaves de Storage deben autenticarse con
+  `--auth-mode login` o con una identidad administrada.
