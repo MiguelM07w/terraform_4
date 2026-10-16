@@ -72,7 +72,19 @@ cambiar sin destruirlos y volver a crearlos.
 | Cuenta de almacenamiento del estado      | `sttfutvtintdevmxc001`                              |
 | Contenedor del estado                    | `tfstate`                                           |
 
-## 4. Diferencias entre el diagrama y la tabla
+## 4. Recursos eliminados por estar fuera del diseño
+
+| Recurso                                                    | Motivo |
+|------------------------------------------------------------|--------|
+| VM Windows `vm-utvt-integradora-dev-mxc-001`, con su disco, NIC `...-001795`, NSG `...-001-nsg` e IP pública `...-001-ip` | Sustituida por la VM Linux del diagrama (ADR-007) |
+| Subred `default` (`10.0.0.0/24`)                           | Creada por el portal; no forma parte de la tabla de diseño |
+| Plan F1 `asp-utvt-integradora-dev-mxc-001` y Web App `app-utvt-integradora-web-dev-mxc-01` | Primer intento en el portal, reemplazado por el plan B1 con VNet Integration |
+
+Se conservan fuera de Terraform `log-utvt-integradora-dev-mxc-001` (Log Analytics) y
+`appi-utvt-integradora-dev-mxc-001` (Application Insights): no aparecen en el diagrama, pero reciben
+la telemetría de la Web App, que los referencia como *data source*.
+
+## 5. Diferencias entre el diagrama y la tabla
 
 | Diagrama                 | Tabla / implementación                     | Motivo                                  |
 |--------------------------|--------------------------------------------|-----------------------------------------|
