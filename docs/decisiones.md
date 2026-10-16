@@ -25,6 +25,10 @@ desplegar un entorno nuevo desde cero.
   cambios no deseados; cada diferencia se revisa antes de aplicar.
 - Los atributos inmutables (*ForceNew*) que difieren del diseño provocan el reemplazo del recurso,
   lo cual se documenta explícitamente en el plan correspondiente.
+- **Cierre de la adopción:** los bloques `import` se retiraron después de comprobar que el `plan`
+  de las cuatro capas no mostraba cambios. Desde entonces, el código describe la infraestructura
+  completa y puede desplegar un entorno nuevo desde cero. Los bloques siguen disponibles en el
+  historial de Git como evidencia del proceso.
 
 ---
 

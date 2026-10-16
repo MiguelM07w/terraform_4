@@ -1,5 +1,3 @@
-data "azurerm_client_config" "current" {}
-
 locals {
   tags = merge(var.tags, {
     iac_layer = "01-network"
