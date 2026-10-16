@@ -2,6 +2,9 @@
 # Directorios de trabajo locales (proveedores y módulos descargados)
 **/.terraform/*
 
+# El lock file solo se versiona en los proyectos raíz, no en los módulos
+modules/**/.terraform.lock.hcl
+
 # Archivos de estado: contienen IDs de recursos y valores sensibles
 *.tfstate
 *.tfstate.*
