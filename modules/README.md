@@ -8,6 +8,7 @@ proveedores ni backend; los proyectos de `projects/` los consumen mediante rutas
 | `virtual-network`        | `azurerm_virtual_network`, `azurerm_subnet` (mapa de subredes con delegaciones y políticas) | `01-network` |
 | `network-security-group` | `azurerm_network_security_group`, `azurerm_network_security_rule`, asociación con subredes | `01-network` |
 | `private-dns-zone`       | `azurerm_private_dns_zone`, `azurerm_private_dns_zone_virtual_network_link` | `01-network` |
+| `private-endpoint`       | `azurerm_private_endpoint` con NIC de nombre personalizado y grupo de zonas DNS | `02-data` |
 
 ## Convenciones
 
